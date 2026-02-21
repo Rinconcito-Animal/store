@@ -8,8 +8,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/src/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         .shop-container {
             padding: 40px 0 100px;
@@ -668,6 +667,9 @@
             }
         }
     </style>
+  <script type="module" crossorigin src="/store/assets/shop-B8k9t411.js"></script>
+  <link rel="modulepreload" crossorigin href="/store/assets/navbar-Cq2JaEci.js">
+  <link rel="stylesheet" crossorigin href="/store/assets/navbar-ZxaqhOjD.css">
 </head>
 
 <body>
@@ -780,7 +782,7 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <div class="logo-container">
-                        <img src="/assets/Rinconcito-Animal.png" alt="Rinconcito Animal Logo" class="logo-img">
+                        <img src="/store/assets/Rinconcito-Animal.png" alt="Rinconcito Animal Logo" class="logo-img">
                         <span>Rinconcito Animal</span>
                     </div>
                     <p>Tu tienda de mascotas local, impulsada por el cuidado moderno.</p>
@@ -791,93 +793,7 @@
             </div>
         </div>
     </footer>
-
-    <script type="module">
-        import { cart } from './src/cart.js';
-        import { initNavbar } from './src/navbar.js';
-
-        initNavbar();
-
-        const cartToggle = document.getElementById('cart-toggle');
-        const cartClose = document.getElementById('cart-close');
-        const cartDrawer = document.getElementById('cart-drawer');
-        const cartOverlay = document.getElementById('cart-overlay');
-        const cartItemsContainer = document.getElementById('cart-items');
-        const cartCount = document.getElementById('cart-count');
-        const cartTotalAmount = document.getElementById('cart-total-amount');
-
-        function toggleCart() {
-            cartDrawer.classList.toggle('active');
-            cartOverlay.classList.toggle('active');
-        }
-
-        function updateCartUI(items) {
-            cartCount.textContent = cart.getCount();
-            cartTotalAmount.textContent = `$${cart.getTotal().toLocaleString('es-CL')}`;
-
-            if (items.length === 0) {
-                cartItemsContainer.innerHTML = '<p style="text-align: center; opacity: 0.5; margin-top: 40px;">Tu carrito está vacío</p>';
-                return;
-            }
-
-            cartItemsContainer.innerHTML = items.map(item => `
-        <div class="cart-item">
-          <div class="cart-item-img">
-            <img src="${item.image}" alt="${item.name}">
-          </div>
-          <div class="cart-item-info">
-            <h4>${item.name}</h4>
-            <p>$${item.price.toLocaleString('es-CL')}</p>
-            <div class="cart-quantity-controls">
-              <button class="qty-btn" onclick="updateQty(${item.id}, ${item.quantity - 1})">-</button>
-              <span>${item.quantity}</span>
-              <button class="qty-btn" onclick="updateQty(${item.id}, ${item.quantity + 1})">+</button>
-            </div>
-          </div>
-          <button class="cart-item-remove" onclick="removeItem(${item.id})">&times;</button>
-        </div>
-      `).join('');
-        }
-
-        async function handleCheckout() {
-            if (cart.items.length === 0) {
-                alert('Tu carrito está vacío. ¡Agrega algunos productos antes de comprar!');
-                return;
-            }
-
-            const confirmPurchase = confirm('¿Confirmas que deseas finalizar tu compra?');
-            if (!confirmPurchase) return;
-
-            // Generate Receipt
-            const receipt = {
-                id: `BOL-${new Date().getFullYear()}-${Math.floor(Math.random() * 9000) + 1000}`,
-                date: new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' }),
-                items: cart.items.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })),
-                total: cart.getTotal(),
-                status: "Completado"
-            };
-
-            // Save to Purchase History in LocalStorage
-            const history = JSON.parse(localStorage.getItem('purchase_history')) || [];
-            history.unshift(receipt); // Newest first
-            localStorage.setItem('purchase_history', JSON.stringify(history));
-
-            // Feedback and Cleanup
-            alert(`¡Compra exitosa!\nTu número de boleta es: ${receipt.id}\nPuedes ver los detalles en "Mi Cuenta".`);
-
-            cart.clear();
-            toggleCart();
-        }
-
-        cartToggle.addEventListener('click', toggleCart);
-        cartClose.addEventListener('click', toggleCart);
-        cartOverlay.addEventListener('click', toggleCart);
-        document.querySelector('.checkout-btn').addEventListener('click', handleCheckout);
-
-        cart.subscribe(updateCartUI);
-        updateCartUI(cart.items);
-    </script>
-    <script type="module" src="/src/shop.js"></script>
+
 </body>
 
 </html>
