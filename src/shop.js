@@ -24,7 +24,7 @@ let filterState = {
 
 async function loadProducts() {
     try {
-        const response = await fetch('./products.json');
+        const response = await fetch(`${import.meta.env.BASE_URL}products.json`);
         if (!response.ok) throw new Error('Failed to load products');
 
         allProducts = await response.json();
