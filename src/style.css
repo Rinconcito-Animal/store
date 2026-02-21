@@ -93,6 +93,13 @@ header {
   color: var(--text-espresso);
 }
 
+.logo-img img {
+  height: 85px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
 .logo-img {
   display: flex;
   align-items: center;
@@ -103,9 +110,9 @@ header {
 /* Handle both div wrapper and direct img tag */
 .logo-img img,
 img.logo-img {
-  width: 140px;
-  height: auto;
-  max-height: 80px;
+  width: auto;
+  height: 85px;
+  max-height: 85px;
   /* Prevent it from being too tall */
   object-fit: contain;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05));
