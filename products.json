@@ -1,0 +1,90 @@
+[
+    {
+        "id": 1,
+        "name": "Alimento Premium Perros Adultos",
+        "category": "alimentos",
+        "subcategoria": "Alimento Seco",
+        "brand": "Royal Canin",
+        "sku": "AL-001-RC",
+        "species": [
+            "Perro"
+        ],
+        "price": 45000,
+        "image": "https://images.unsplash.com/photo-1585445497204-9472eec915d8?auto=format&fit=crop&q=80&w=800",
+        "description": "Nutrición completa y equilibrada para perros adultos de todas las razas."
+    },
+    {
+        "id": 2,
+        "name": "Alimento Gatos Esterilizados",
+        "category": "alimentos",
+        "subcategoria": "Alimento Seco",
+        "brand": "Pro Plan",
+        "sku": "AL-002-PP",
+        "species": [
+            "Gato"
+        ],
+        "price": 38000,
+        "image": "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=800",
+        "description": "Control de peso y salud urinaria para gatos castrados."
+    },
+    {
+        "id": 3,
+        "name": "Arnés Ergonómico Reflectante",
+        "category": "accesorios",
+        "subcategoria": "Paseo",
+        "brand": "Julius-K9",
+        "sku": "AC-003-JK",
+        "species": [
+            "Perro",
+            "Gato"
+        ],
+        "price": 15000,
+        "image": "https://images.unsplash.com/photo-1541599540903-21b15779a422?auto=format&fit=crop&q=80&w=800",
+        "description": "Comodidad y seguridad máxima para tus paseos nocturnos."
+    },
+    {
+        "id": 4,
+        "name": "Rascador Multinivel para Gatos",
+        "category": "accesorios",
+        "subcategoria": "Hogar",
+        "brand": "Catit",
+        "sku": "AC-004-CT",
+        "species": [
+            "Gato"
+        ],
+        "price": 55000,
+        "image": "https://images.unsplash.com/photo-1591160690555-5debfba289f0?auto=format&fit=crop&q=80&w=800",
+        "description": "Diversión y descanso en un solo lugar para tu felino."
+    },
+    {
+        "id": 5,
+        "name": "Cama Ortopédica para Mascotas",
+        "category": "accesorios",
+        "subcategoria": "Descanso",
+        "brand": "Kong",
+        "sku": "AC-005-KG",
+        "species": [
+            "Perro",
+            "Gato"
+        ],
+        "price": 32000,
+        "image": "https://images.unsplash.com/photo-1591768793355-74d7c8360382?auto=format&fit=crop&q=80&w=800",
+        "description": "Espuma con memoria para el mejor descanso de sus articulaciones."
+    },
+    {
+        "id": 6,
+        "name": "Shampoo Hipoalergénico",
+        "category": "higiene",
+        "subcategoria": "Baño",
+        "brand": "Vichy Pets",
+        "sku": "HI-006-VP",
+        "species": [
+            "Perro",
+            "Gato",
+            "Conejo"
+        ],
+        "price": 8500,
+        "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=800",
+        "description": "Limpieza suave para pieles sensibles y todo tipo de pelaje."
+    }
+]

@@ -1,9 +1,11 @@
 import './style.css'
+import { initNavbar } from './navbar.js'
 
 // Micro-animations and interactivity
 document.addEventListener('DOMContentLoaded', () => {
+  initNavbar();
   const cards = document.querySelectorAll('.card');
-  
+
   const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'

@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Cuenta | Rinconcito Animal</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css">
+    <style>
+        .account-container {
+            padding: 60px 0 100px;
+            min-height: 80vh;
+        }
+
+        .account-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+        }
+
+        /* Sidebar Navigation */
+        .account-sidebar {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            height: fit-content;
+        }
+
+        .account-nav {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .account-nav-btn {
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text-espresso);
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-nav-btn:hover {
+            background: var(--accent-blue-light);
+            color: var(--accent-blue);
+        }
+
+        .account-nav-btn.active {
+            background: var(--accent-blue);
+            color: var(--white);
+        }
+
+        /* Content Area */
+        .account-content {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            box-shadow: var(--shadow-soft);
+            min-height: 500px;
+        }
+
+        .account-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .account-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 32px;
+            color: var(--text-espresso);
+            border-bottom: 2px solid var(--accent-blue-light);
+            padding-bottom: 16px;
+        }
+
+        /* Profile Styles */
+        .profile-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: var(--text-espresso);
+            padding: 12px;
+            background: var(--bg-cream);
+            border-radius: 8px;
+        }
+
+        .profile-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .edit-profile-btn {
+            background: var(--accent-blue-light);
+            color: var(--accent-blue);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-profile-btn:hover {
+            background: var(--accent-blue);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Receipt Styles */
+        .receipts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .receipt-card {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            align-items: center;
+            gap: 24px;
+            padding: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .receipt-card:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .receipt-icon {
+            font-size: 1.5rem;
+            background: var(--accent-blue-light);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .receipt-details h4 {
+            margin-bottom: 4px;
+        }
+
+        .receipt-details p {
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        .receipt-amount {
+            font-weight: 800;
+            color: var(--accent-gold);
+        }
+
+        .receipt-status {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .status-completed {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        /* Pet Styles */
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .pet-card {
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .pet-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-sage);
+        }
+
+        .pet-img {
+            width: 100%;
+            height: 180px;
+            background: var(--bg-cream);
+            position: relative;
+        }
+
+        .pet-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pet-info {
+            padding: 20px;
+        }
+
+        .pet-type {
+            font-size: 0.8rem;
+            color: var(--accent-sage);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pet-name {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        .pet-meta {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Registration Button & Form */
+        .add-pet-container {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 24px;
+        }
+
+        .add-pet-btn {
+            background: var(--accent-sage);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(156, 175, 136, 0.2);
+        }
+
+        .add-pet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(156, 175, 136, 0.3);
+        }
+
+        .form-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .form-modal.active {
+            display: flex;
+        }
+
+        .form-container {
+            background: var(--white);
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            position: relative;
+            animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .pet-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--accent-blue-light);
+            background: var(--bg-cream);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .form-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 2px solid var(--accent-blue-light);
+            color: var(--text-espresso);
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background: var(--accent-blue);
+            color: var(--white);
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (max-width: 968px) {
+            .account-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="/" class="logo-container">
+            <div class="logo-img"><img src="/assets/Rinconcito-Animal.png" width="100" alt="Rinconcito Animal Logo">
+            </div>
+        </a>
+        <nav>
+            <ul style="display: flex; align-items: center;">
+                <li><a href="/shop.html">Tienda</a></li>
+                <li><a href="/index.html#services">Servicios</a></li>
+                <li><a href="/index.html#tech">Plataforma Tech</a></li>
+                <li><a href="/account.html" class="active">Mi Cuenta</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <main id="app">
+        <section class="account-container">
+            <div class="container">
+                <div class="account-grid">
+                    <aside class="account-sidebar">
+                        <ul class="account-nav">
+                            <li><button class="account-nav-btn active" data-target="profile">👤 Perfil Personal</button>
+                            </li>
+                            <li><button class="account-nav-btn" data-target="history">📜 Historial de Compras</button>
+                            </li>
+                            <li><button class="account-nav-btn" data-target="pets">🐾 Mis Mascotas</button></li>
+                        </ul>
+                    </aside>
+
+                    <div class="account-content">
+                        <!-- Profile Section -->
+                        <div class="account-section active" id="profile">
+                            <h2 class="section-title">Perfil Personal</h2>
+                            <div class="profile-info" id="profile-data">
+                                <!-- Loaded via JS -->
+                            </div>
+                            <div class="profile-actions">
+                                <button class="edit-profile-btn" id="open-profile-modal">
+                                    <span>✏️</span> Editar Perfil
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- History Section -->
+                        <div class="account-section" id="history">
+                            <h2 class="section-title">Boletas Anteriores</h2>
+                            <div class="receipts-list" id="receipts-list">
+                                <!-- Loaded via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Pets Section -->
+                        <div class="account-section" id="pets">
+                            <h2 class="section-title">Mis Mascotas</h2>
+                            <div class="add-pet-container">
+                                <button class="add-pet-btn" id="open-pet-modal">
+                                    <span>➕</span> Registrar Nueva Mascota
+                                </button>
+                            </div>
+                            <div class="pets-grid" id="pets-grid">
+                                <!-- Loaded via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Profile Edit Modal -->
+    <div class="form-modal" id="profile-modal">
+        <div class="form-container">
+            <h2 style="margin-bottom: 24px;">Editar Perfil</h2>
+            <form class="pet-form" id="edit-profile-form">
+                <div class="form-group">
+                    <label for="user-name">Nombre Completo</label>
+                    <input type="text" id="user-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-email">Email</label>
+                    <input type="email" id="user-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-phone">Teléfono</label>
+                    <input type="text" id="user-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-address">Dirección de Despacho</label>
+                    <input type="text" id="user-address" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="close-profile-modal">Cancelar</button>
+                    <button type="submit" class="btn-submit">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pet Registration Modal -->
+    <div class="form-modal" id="pet-modal">
+        <div class="form-container">
+            <h2 style="margin-bottom: 24px;">Nueva Mascota</h2>
+            <form class="pet-form" id="add-pet-form">
+                <div class="form-group">
+                    <label for="pet-name">Nombre</label>
+                    <input type="text" id="pet-name" placeholder="Ej: Max" required>
+                </div>
+                <div class="form-group">
+                    <label for="pet-type">Especie</label>
+                    <select id="pet-type" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Perro">Perro</option>
+                        <option value="Gato">Gato</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pet-breed">Raza</label>
+                    <input type="text" id="pet-breed" placeholder="Ej: Golden Retriever" required>
+                </div>
+                <div class="form-group">
+                    <label for="pet-age">Edad</label>
+                    <input type="text" id="pet-age" placeholder="Ej: 3 años" required>
+                </div>
+                <div class="form-group">
+                    <label for="pet-image">URL de Imagen (Opcional)</label>
+                    <input type="url" id="pet-image" placeholder="https://...">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="close-pet-modal">Cancelar</button>
+                    <button type="submit" class="btn-submit">Guardar Mascota</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo-container">
+                        <img src="/assets/Rinconcito-Animal.png" alt="Rinconcito Animal Logo" class="logo-img">
+                        <span>Rinconcito Animal</span>
+                    </div>
+                    <p>Tu tienda de mascotas local, impulsada por el cuidado moderno.</p>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Rinconcito Animal. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initNavbar } from './src/navbar.js';
+        initNavbar();
+    </script>
+    <script type="module" src="/src/account.js"></script>
+</body>
+
+</html>
