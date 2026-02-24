@@ -8,10 +8,10 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="/store/assets/main-BH3oLgyx.js"></script>
-  <link rel="modulepreload" crossorigin href="/store/assets/navbar-xBuXVDAC.js">
-  <link rel="stylesheet" crossorigin href="/store/assets/navbar-5gat5VKd.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/assets/main-CdPHXfh3.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/navbar-BaqoyTjM.js">
+  <link rel="stylesheet" crossorigin href="/assets/navbar-BC4ygDhr.css">
 </head>
 
 <body>
@@ -21,10 +21,10 @@
     </a>
     <nav>
       <ul>
+        <li><a href="./index.html">Inicio</a></li>
         <li><a href="./shop.html">Tienda</a></li>
-        <li><a href="#services">Servicios</a></li>
-        <li><a href="#tech">Plataforma Tech</a></li>
-        <li><a href="./account.html">Mi Cuenta</a></li>
+        <li><a href="./signup.html" id="register-link">Registrarse</a></li>
+        <li><a href="./account.html" id="auth-link">Mi Cuenta</a></li>
       </ul>
     </nav>
     <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
@@ -72,16 +72,11 @@
             <h3>Accesorios</h3>
             <p>Artículos modernos, duraderos y con estilo para el juego y descanso.</p>
           </a>
-          <a href="#" class="card">
-            <div class="card-icon service-card-icon">✨</div>
-            <h3>Futuros Servicios</h3>
-            <p>Próximamente: Peluquería, Vacunación y Telemedicina.</p>
-          </a>
         </div>
       </div>
     </section>
 
-    <section class="section tech-section" id="tech">
+    <!-- <section class="section tech-section" id="tech">
       <div class="container tech-grid">
         <div class="tech-card">
           <span class="badge-tech">Innovación</span>
@@ -95,7 +90,7 @@
           </ul>
         </div>
       </div>
-    </section>
+    </section> -->
   </main>
 
   <footer>
@@ -103,7 +98,7 @@
       <div class="footer-content">
         <div class="footer-brand">
           <div class="logo-container">
-            <img src="/store/assets/Rinconcito-Animal.png" alt="Rinconcito Animal Logo" class="logo-img">
+            <img src="/assets/Rinconcito-Animal.png" alt="Rinconcito Animal Logo" class="logo-img">
             <span>Rinconcito Animal</span>
           </div>
           <p>Tu tienda de mascotas local, impulsada por el cuidado moderno.</p>
@@ -115,6 +110,34 @@
     </div>
   </footer>
 
+  <!-- Welcome Modal -->
+  <div class="welcome-overlay" id="welcome-modal">
+    <div class="welcome-modal">
+      <button class="welcome-close" id="welcome-close">✕</button>
+      <div class="welcome-image">🐾</div>
+      <h2>¡Bienvenidos a Rinconcito Animal! 🏠</h2>
+      <p>Queremos que tus mascotas tengan lo mejor. Crea tu cuenta ahora para poder realizar pedidos y gestionar el
+        cuidado de tus amigos.</p>
+
+      <div class="welcome-info">
+        <h3>¿Cómo empezar? 📝</h3>
+        <ul>
+          <li>1. Haz clic en <strong>Registrarse</strong></li>
+          <li>2. Usa tu <strong>Email y Contraseña</strong></li>
+          <li>3. ¡Listo! Ya puedes comprar</li>
+        </ul>
+      </div>
+
+      <div class="delivery-notice">
+        <span>🚚</span>
+        <p><strong>Repartos:</strong> Todos los días de 18:00 a 22:00 hrs.</p>
+      </div>
+
+      <a href="./signup.html" class="welcome-cta">Registrarse Ahora</a>
+      <p class="welcome-footer">¿Ya tienes cuenta? <a href="./login.html">Ingresar aquí</a></p>
+    </div>
+  </div>
+
 </body>
 
 </html>

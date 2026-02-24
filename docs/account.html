@@ -238,7 +238,7 @@
 
         .pet-img {
             width: 100%;
-            height: 180px;
+            aspect-ratio: 1 / 1;
             background: var(--bg-cream);
             position: relative;
         }
@@ -247,6 +247,36 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .update-photo-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+            z-index: 2;
+            font-size: 1.1rem;
+        }
+
+        .update-photo-btn:hover {
+            background: var(--white);
+            transform: scale(1.1);
+            color: var(--accent-blue);
+        }
+
+        .update-photo-btn:disabled {
+            cursor: wait;
+            opacity: 0.8;
         }
 
         .pet-info {
@@ -407,9 +437,9 @@
             }
         }
     </style>
-  <script type="module" crossorigin src="/store/assets/account-C1Yo_26B.js"></script>
-  <link rel="modulepreload" crossorigin href="/store/assets/navbar-xBuXVDAC.js">
-  <link rel="stylesheet" crossorigin href="/store/assets/navbar-5gat5VKd.css">
+  <script type="module" crossorigin src="/assets/account-Ci5VlTWC.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/navbar-BaqoyTjM.js">
+  <link rel="stylesheet" crossorigin href="/assets/navbar-BC4ygDhr.css">
 </head>
 
 <body>
@@ -420,10 +450,9 @@
         </a>
         <nav>
             <ul style="display: flex; align-items: center;">
+                <li><a href="./index.html">Inicio</a></li>
                 <li><a href="./shop.html">Tienda</a></li>
-                <li><a href="./index.html#services">Servicios</a></li>
-                <li><a href="./index.html#tech">Plataforma Tech</a></li>
-                <li><a href="./account.html" class="active">Mi Cuenta</a></li>
+                <li><a href="./account.html" class="active" id="auth-link">Mi Cuenta</a></li>
             </ul>
         </nav>
         <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
@@ -543,8 +572,8 @@
                     <input type="text" id="pet-age" placeholder="Ej: 3 años" required>
                 </div>
                 <div class="form-group">
-                    <label for="pet-image">URL de Imagen (Opcional)</label>
-                    <input type="url" id="pet-image" placeholder="https://...">
+                    <label for="pet-image">Foto de la Mascota</label>
+                    <input type="file" id="pet-image" accept="image/*" required>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" id="close-pet-modal">Cancelar</button>
@@ -559,7 +588,7 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <div class="logo-container">
-                        <img src="/store/assets/Rinconcito-Animal.png" alt="Rinconcito Animal Logo" class="logo-img">
+                        <img src="/assets/Rinconcito-Animal.png" alt="Rinconcito Animal Logo" class="logo-img">
                         <span>Rinconcito Animal</span>
                     </div>
                     <p>Tu tienda de mascotas local, impulsada por el cuidado moderno.</p>

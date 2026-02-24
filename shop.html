@@ -199,9 +199,7 @@
             margin: 0;
             color: var(--text-espresso);
             line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            word-wrap: break-word;
         }
 
         .product-brand {
@@ -238,6 +236,18 @@
             color: var(--white);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(136, 180, 194, 0.3);
+        }
+
+        .add-to-cart.in-cart {
+            background: var(--accent-sage);
+            color: var(--white);
+            box-shadow: 0 4px 14px rgba(156, 175, 136, 0.3);
+        }
+
+        .add-to-cart.in-cart:hover {
+            background: #7a9a68;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(156, 175, 136, 0.4);
         }
 
         .cart-toggle:hover {
@@ -667,6 +677,293 @@
                 font-size: 1.8rem;
             }
         }
+
+        /* ============================
+           CHECKOUT MODAL
+           ============================ */
+        .checkout-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .checkout-overlay.active {
+            display: flex;
+        }
+
+        .checkout-modal {
+            background: var(--white);
+            width: 100%;
+            max-width: 520px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            animation: modalFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .checkout-modal-header {
+            padding: 28px 32px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .checkout-modal-header h2 {
+            font-size: 1.6rem;
+            color: var(--text-espresso);
+            margin: 0;
+        }
+
+        .checkout-modal-close {
+            width: 36px;
+            height: 36px;
+            background: var(--accent-blue-light);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            color: var(--text-espresso);
+        }
+
+        .checkout-modal-close:hover {
+            background: var(--accent-blue);
+            color: var(--white);
+            transform: scale(1.05);
+        }
+
+        .checkout-modal-body {
+            padding: 28px 32px;
+        }
+
+        .checkout-section {
+            margin-bottom: 28px;
+        }
+
+        .checkout-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkout-section h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-blue);
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .checkout-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkout-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .checkout-option:hover {
+            border-color: var(--accent-blue-light);
+            background: rgba(136, 180, 194, 0.04);
+        }
+
+        .checkout-option input[type="radio"] {
+            accent-color: var(--accent-sage);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkout-option.selected {
+            border-color: var(--accent-sage);
+            background: rgba(156, 175, 136, 0.06);
+            box-shadow: 0 2px 12px rgba(156, 175, 136, 0.15);
+        }
+
+        .checkout-option-icon {
+            font-size: 1.4rem;
+            width: 36px;
+            text-align: center;
+        }
+
+        .checkout-option-info {
+            flex: 1;
+        }
+
+        .checkout-option-info span {
+            display: block;
+            font-weight: 700;
+            color: var(--text-espresso);
+            font-size: 0.95rem;
+        }
+
+        .checkout-option-info small {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            font-weight: 500;
+        }
+
+        .checkout-option-price {
+            font-weight: 800;
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .delivery-details-container {
+            margin-top: 14px;
+            padding: 20px;
+            background: var(--accent-blue-light);
+            border-radius: 14px;
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .delivery-details-container.visible {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delivery-field label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-espresso);
+            margin-bottom: 8px;
+        }
+
+        .delivery-field input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-espresso);
+            background: var(--white);
+            transition: var(--transition);
+            box-sizing: border-box;
+        }
+
+        .delivery-field input:focus {
+            outline: none;
+            border-color: var(--accent-sage);
+            box-shadow: 0 0 0 3px rgba(156, 175, 136, 0.15);
+        }
+
+        .delivery-note {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.75rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .checkout-summary {
+            padding: 20px 32px 28px;
+            background: linear-gradient(135deg, rgba(156, 175, 136, 0.08), rgba(136, 180, 194, 0.08));
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .checkout-summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .checkout-summary-row.delivery-cost {
+            color: var(--accent-gold);
+            font-weight: 600;
+            display: none;
+        }
+
+        .checkout-summary-row.delivery-cost.visible {
+            display: flex;
+        }
+
+        .checkout-summary-row.total {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-espresso);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .checkout-confirm-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-sage);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 10px 20px rgba(156, 175, 136, 0.2);
+            margin-top: 18px;
+        }
+
+        .checkout-confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(156, 175, 136, 0.3);
+        }
+
+        .checkout-confirm-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 500px) {
+
+            .checkout-modal-body,
+            .checkout-summary,
+            .checkout-modal-header {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
     </style>
 </head>
 
@@ -678,10 +975,9 @@
         </a>
         <nav>
             <ul style="display: flex; align-items: center;">
+                <li><a href="./index.html">Inicio</a></li>
                 <li><a href="./shop.html">Tienda</a></li>
-                <li><a href="./index.html#services">Servicios</a></li>
-                <li><a href="./index.html#tech">Plataforma Tech</a></li>
-                <li><a href="./account.html">Mi Cuenta</a></li>
+                <li><a href="./account.html" id="auth-link">Mi Cuenta</a></li>
                 <li>
                     <button class="cart-toggle" id="cart-toggle">
                         🛒 <span class="cart-badge" id="cart-count">0</span>
@@ -747,33 +1043,183 @@
                     <div id="search-suggestions" class="search-suggestions"></div>
                 </div>
 
-                <div class="filter-group">
-                    <span class="filter-label">Categoría</span>
-                    <div class="filter-container">
-                        <button class="filter-btn active" data-filter="category" data-value="all">Todos</button>
-                        <button class="filter-btn" data-filter="category" data-value="alimentos">Alimentos</button>
-                        <button class="filter-btn" data-filter="category" data-value="accesorios">Accesorios</button>
-                        <button class="filter-btn" data-filter="category" data-value="higiene">Higiene</button>
-                    </div>
+                <div class="mobile-filter-bar">
+                    <button id="filter-toggle-btn" class="filter-toggle-btn">
+                        <span>⚙️ Filtros</span>
+                        <span id="active-filter-count" class="active-filter-count hidden">0</span>
+                    </button>
                 </div>
 
-                <div class="filter-group">
-                    <span class="filter-label">Especie</span>
-                    <div class="filter-container">
-                        <button class="filter-btn active" data-filter="species" data-value="all">Todas</button>
-                        <button class="filter-btn" data-filter="species" data-value="Perro">Perro</button>
-                        <button class="filter-btn" data-filter="species" data-value="Gato">Gato</button>
-                        <button class="filter-btn" data-filter="species" data-value="Conejo">Pequeños Animales</button>
-                    </div>
-                </div>
+                <!-- Filter overlay backdrop for mobile -->
+                <div class="filter-overlay" id="filter-overlay"></div>
 
-                <div class="products-grid" id="products-grid">
-                    <!-- Products will be loaded here via JS -->
-                    <div class="loading">Cargando productos...</div>
+                <div class="shop-layout">
+                    <!-- Sidebar Filters -->
+                    <aside class="shop-sidebar" id="shop-sidebar">
+                        <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Cerrar filtros">✕</button>
+                        <div class="sidebar-header">
+                            <h3>Filtros Avanzados</h3>
+                            <button id="clear-filters" class="btn-text">Limpiar todo</button>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="filter-section">
+                            <h4 class="filter-title">Rango de Precio</h4>
+                            <div class="price-range-container">
+                                <div class="price-inputs">
+                                    <span>$</span>
+                                    <input type="number" id="price-min" placeholder="Min" min="0">
+                                    <span>-</span>
+                                    <input type="number" id="price-max" placeholder="Max" min="0">
+                                </div>
+                                <input type="range" id="price-slider" min="0" max="100000" step="1000">
+                            </div>
+                        </div>
+
+                        <!-- Species -->
+                        <div class="filter-section">
+                            <h4 class="filter-title">Especie</h4>
+                            <div class="filter-options" id="filter-species">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+
+                        <!-- Categories -->
+                        <div class="filter-section">
+                            <h4 class="filter-title">Categorías</h4>
+                            <div class="filter-options" id="filter-categories">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+
+                        <!-- Brands -->
+                        <div class="filter-section">
+                            <h4 class="filter-title">Marcas</h4>
+                            <div class="filter-options" id="filter-brands">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Main Content -->
+                    <div class="shop-main">
+                        <div class="shop-toolbar">
+                            <span id="results-count">Cargando productos...</span>
+                            <div class="sort-container">
+                                <label for="sort-by">Ordenar por:</label>
+                                <select id="sort-by">
+                                    <option value="featured">Destacados</option>
+                                    <option value="price-low">Precio: Menor a Mayor</option>
+                                    <option value="price-high">Precio: Mayor a Menor</option>
+                                    <option value="newest">Más recientes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="products-grid" id="products-grid">
+                            <!-- Products will be loaded here via JS -->
+                            <div class="loading">Cargando productos...</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
+
+    <!-- Checkout Modal -->
+    <div class="checkout-overlay" id="checkout-overlay">
+        <div class="checkout-modal">
+            <div class="checkout-modal-header">
+                <h2>Finalizar Compra</h2>
+                <button class="checkout-modal-close" id="checkout-close">&times;</button>
+            </div>
+            <div class="checkout-modal-body">
+                <!-- Payment Method -->
+                <div class="checkout-section">
+                    <h3>💳 Método de Pago</h3>
+                    <div class="checkout-options" id="payment-options">
+                        <label class="checkout-option">
+                            <input type="radio" name="payment" value="tarjeta">
+                            <span class="checkout-option-icon">💳</span>
+                            <div class="checkout-option-info">
+                                <span>Tarjeta al recibir</span>
+                                <small>Paga con tarjeta de débito o crédito al momento de la entrega</small>
+                            </div>
+                        </label>
+                        <label class="checkout-option">
+                            <input type="radio" name="payment" value="efectivo">
+                            <span class="checkout-option-icon">💵</span>
+                            <div class="checkout-option-info">
+                                <span>Efectivo al recibir</span>
+                                <small>Paga en efectivo al momento de la entrega</small>
+                            </div>
+                        </label>
+                        <label class="checkout-option">
+                            <input type="radio" name="payment" value="link">
+                            <span class="checkout-option-icon">🔗</span>
+                            <div class="checkout-option-info">
+                                <span>Link de pago</span>
+                                <small>Recibirás un link para pagar online de forma segura</small>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Delivery Method -->
+                <div class="checkout-section">
+                    <h3>🚚 Método de Entrega</h3>
+                    <div class="checkout-options" id="delivery-options">
+                        <label class="checkout-option">
+                            <input type="radio" name="delivery" value="retiro">
+                            <span class="checkout-option-icon">🏪</span>
+                            <div class="checkout-option-info">
+                                <span>Retiro en local</span>
+                                <small>Retira tu pedido directamente en nuestra tienda</small>
+                            </div>
+                            <span class="checkout-option-price">Gratis</span>
+                        </label>
+                        <label class="checkout-option">
+                            <input type="radio" name="delivery" value="delivery">
+                            <span class="checkout-option-icon">🛵</span>
+                            <div class="checkout-option-info">
+                                <span>Delivery</span>
+                                <small>Envío a tu domicilio, costo aproximado</small>
+                            </div>
+                            <span class="checkout-option-price">+$1.000</span>
+                        </label>
+                    </div>
+                    <div class="delivery-details-container" id="delivery-details-container">
+                        <div class="delivery-field">
+                            <label for="delivery-address">📍 Dirección de entrega</label>
+                            <input type="text" id="delivery-address" placeholder="Ej: Av. Principal 123, Santiago">
+                        </div>
+                        <div class="delivery-field">
+                            <label for="delivery-date">📅 Fecha de entrega (18:00 - 22:00 hras)</label>
+                            <input type="date" id="delivery-date">
+                            <small class="delivery-note">Las entregas se realizan exclusivamente en el horario
+                                definido.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-summary">
+                <div class="checkout-summary-row">
+                    <span>Subtotal</span>
+                    <span id="checkout-subtotal">$0</span>
+                </div>
+                <div class="checkout-summary-row delivery-cost" id="checkout-delivery-cost">
+                    <span>Costo de delivery</span>
+                    <span>+$1.000</span>
+                </div>
+                <div class="checkout-summary-row total">
+                    <span>Total</span>
+                    <span id="checkout-total">$0</span>
+                </div>
+                <button class="checkout-confirm-btn" id="checkout-confirm-btn" disabled>Confirmar Compra</button>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="container">
@@ -795,6 +1241,8 @@
     <script type="module">
         import { cart } from './src/cart.js';
         import { initNavbar } from './src/navbar.js';
+        import { db, auth } from './src/firebase.js';
+        import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
         initNavbar();
 
@@ -806,14 +1254,17 @@
         const cartCount = document.getElementById('cart-count');
         const cartTotalAmount = document.getElementById('cart-total-amount');
 
-        function toggleCart() {
+        window.toggleCart = function () {
             cartDrawer.classList.toggle('active');
             cartOverlay.classList.toggle('active');
         }
 
         function updateCartUI(items) {
-            cartCount.textContent = cart.getCount();
-            cartTotalAmount.textContent = `$${cart.getTotal().toLocaleString('es-CL')}`;
+            const currentCartCount = document.getElementById('cart-count');
+            const currentCartTotal = document.getElementById('cart-total-amount');
+
+            if (currentCartCount) currentCartCount.textContent = cart.getCount();
+            if (currentCartTotal) currentCartTotal.textContent = `$${cart.getTotal().toLocaleString('es-CL')}`;
 
             if (items.length === 0) {
                 cartItemsContainer.innerHTML = '<p style="text-align: center; opacity: 0.5; margin-top: 40px;">Tu carrito está vacío</p>';
@@ -829,50 +1280,232 @@
             <h4>${item.name}</h4>
             <p>$${item.price.toLocaleString('es-CL')}</p>
             <div class="cart-quantity-controls">
-              <button class="qty-btn" onclick="updateQty(${item.id}, ${item.quantity - 1})">-</button>
+              <button class="qty-btn" data-action="decrease" data-id="${item.id}">-</button>
               <span>${item.quantity}</span>
-              <button class="qty-btn" onclick="updateQty(${item.id}, ${item.quantity + 1})">+</button>
+              <button class="qty-btn" data-action="increase" data-id="${item.id}">+</button>
             </div>
           </div>
-          <button class="cart-item-remove" onclick="removeItem(${item.id})">&times;</button>
+          <button class="cart-item-remove" data-action="remove" data-id="${item.id}">&times;</button>
         </div>
       `).join('');
+
+            // Attach event listeners to cart buttons
+            cartItemsContainer.querySelectorAll('.qty-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    const action = btn.getAttribute('data-action');
+                    const item = cart.items.find(i => i.id === id);
+                    if (!item) return;
+                    if (action === 'decrease') {
+                        if (item.quantity <= 1) {
+                            cart.removeItem(id);
+                        } else {
+                            cart.updateQuantity(id, item.quantity - 1);
+                        }
+                    } else {
+                        cart.updateQuantity(id, item.quantity + 1);
+                    }
+                });
+            });
+
+            cartItemsContainer.querySelectorAll('.cart-item-remove').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    cart.removeItem(id);
+                });
+            });
         }
 
-        async function handleCheckout() {
+        // ============================
+        // CHECKOUT MODAL LOGIC
+        // ============================
+        const DELIVERY_COST = 1000;
+        const checkoutOverlay = document.getElementById('checkout-overlay');
+        const checkoutCloseBtn = document.getElementById('checkout-close');
+        const checkoutConfirmBtn = document.getElementById('checkout-confirm-btn');
+        const deliveryDetailsContainer = document.getElementById('delivery-details-container');
+        const deliveryAddressInput = document.getElementById('delivery-address');
+        const deliveryDateInput = document.getElementById('delivery-date');
+        const checkoutSubtotal = document.getElementById('checkout-subtotal');
+        const checkoutDeliveryCost = document.getElementById('checkout-delivery-cost');
+        const checkoutTotal = document.getElementById('checkout-total');
+
+        function openCheckoutModal() {
             if (cart.items.length === 0) {
                 alert('Tu carrito está vacío. ¡Agrega algunos productos antes de comprar!');
                 return;
             }
 
-            const confirmPurchase = confirm('¿Confirmas que deseas finalizar tu compra?');
-            if (!confirmPurchase) return;
+            // Require authentication
+            const user = auth.currentUser;
+            if (!user) {
+                alert('Debes iniciar sesión para finalizar tu compra.');
+                window.location.href = '/signup.html';
+                return;
+            }
+            // Reset selections
+            document.querySelectorAll('#checkout-overlay input[type="radio"]').forEach(r => r.checked = false);
+            document.querySelectorAll('#checkout-overlay .checkout-option').forEach(o => o.classList.remove('selected'));
+            deliveryDetailsContainer.classList.remove('visible');
+            deliveryAddressInput.value = '';
+            deliveryDateInput.value = '';
 
-            // Generate Receipt
+            // Set min date to today
+            const today = new Date().toISOString().split('T')[0];
+            deliveryDateInput.min = today;
+
+            checkoutDeliveryCost.classList.remove('visible');
+            checkoutConfirmBtn.disabled = true;
+
+            // Set totals
+            const subtotal = cart.getTotal();
+            checkoutSubtotal.textContent = `$${subtotal.toLocaleString('es-CL')}`;
+            checkoutTotal.textContent = `$${subtotal.toLocaleString('es-CL')}`;
+
+            // Close cart drawer, open checkout
+            cartDrawer.classList.remove('active');
+            cartOverlay.classList.remove('active');
+            checkoutOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCheckoutModal() {
+            checkoutOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function getSelectedDelivery() {
+            const radio = document.querySelector('input[name="delivery"]:checked');
+            return radio ? radio.value : null;
+        }
+
+        function getSelectedPayment() {
+            const radio = document.querySelector('input[name="payment"]:checked');
+            return radio ? radio.value : null;
+        }
+
+        function updateCheckoutTotals() {
+            const subtotal = cart.getTotal();
+            const isDelivery = getSelectedDelivery() === 'delivery';
+            const total = isDelivery ? subtotal + DELIVERY_COST : subtotal;
+
+            checkoutSubtotal.textContent = `$${subtotal.toLocaleString('es-CL')}`;
+            checkoutTotal.textContent = `$${total.toLocaleString('es-CL')}`;
+
+            if (isDelivery) {
+                checkoutDeliveryCost.classList.add('visible');
+                deliveryDetailsContainer.classList.add('visible');
+            } else {
+                checkoutDeliveryCost.classList.remove('visible');
+                deliveryDetailsContainer.classList.remove('visible');
+            }
+
+            validateCheckout();
+        }
+
+        function validateCheckout() {
+            const payment = getSelectedPayment();
+            const delivery = getSelectedDelivery();
+            const addressOk = delivery !== 'delivery' || deliveryAddressInput.value.trim().length > 0;
+            const dateOk = delivery !== 'delivery' || deliveryDateInput.value !== '';
+            checkoutConfirmBtn.disabled = !(payment && delivery && addressOk && dateOk);
+        }
+
+        // Highlight selected option card
+        document.querySelectorAll('#checkout-overlay .checkout-option input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const group = radio.closest('.checkout-options');
+                group.querySelectorAll('.checkout-option').forEach(o => o.classList.remove('selected'));
+                radio.closest('.checkout-option').classList.add('selected');
+                updateCheckoutTotals();
+            });
+        });
+
+        deliveryAddressInput.addEventListener('input', validateCheckout);
+        deliveryDateInput.addEventListener('change', validateCheckout);
+
+        checkoutConfirmBtn.addEventListener('click', async () => {
+            const payment = getSelectedPayment();
+            const delivery = getSelectedDelivery();
+            const address = delivery === 'delivery' ? deliveryAddressInput.value.trim() : null;
+            const deliveryDate = delivery === 'delivery' ? deliveryDateInput.value : null;
+
+            if (!payment || !delivery) return;
+            if (delivery === 'delivery' && (!address || !deliveryDate)) {
+                if (!address) deliveryAddressInput.focus();
+                else deliveryDateInput.focus();
+                return;
+            }
+
+            const paymentLabels = {
+                tarjeta: 'Tarjeta al recibir',
+                efectivo: 'Efectivo al recibir',
+                link: 'Link de pago'
+            };
+            const deliveryLabels = {
+                retiro: 'Retiro en local',
+                delivery: 'Delivery'
+            };
+
+            const subtotal = cart.getTotal();
+            const deliveryCost = delivery === 'delivery' ? DELIVERY_COST : 0;
+            const total = subtotal + deliveryCost;
+
             const receipt = {
                 id: `BOL-${new Date().getFullYear()}-${Math.floor(Math.random() * 9000) + 1000}`,
                 date: new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' }),
                 items: cart.items.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })),
-                total: cart.getTotal(),
-                status: "Completado"
+                subtotal: subtotal,
+                deliveryCost: deliveryCost,
+                total: total,
+                paymentMethod: paymentLabels[payment],
+                deliveryMethod: deliveryLabels[delivery],
+                deliveryAddress: address,
+                deliveryDate: deliveryDate,
+                status: 'Por Entregar'
             };
 
-            // Save to Purchase History in LocalStorage
+            // Save to localStorage
             const history = JSON.parse(localStorage.getItem('purchase_history')) || [];
-            history.unshift(receipt); // Newest first
+            history.unshift(receipt);
             localStorage.setItem('purchase_history', JSON.stringify(history));
 
-            // Feedback and Cleanup
-            alert(`¡Compra exitosa!\nTu número de boleta es: ${receipt.id}\nPuedes ver los detalles en "Mi Cuenta".`);
+            // Save to Firestore
+            checkoutConfirmBtn.disabled = true;
+            checkoutConfirmBtn.textContent = 'Procesando...';
 
-            cart.clear();
-            toggleCart();
-        }
+            try {
+                const user = auth.currentUser;
+                const orderData = {
+                    ...receipt,
+                    createdAt: serverTimestamp(),
+                    userId: user ? user.uid : null,
+                    userEmail: user ? user.email : null,
+                };
+                await addDoc(collection(db, 'orders'), orderData);
+                console.log('Orden guardada en Firestore exitosamente');
+
+                closeCheckoutModal();
+                alert(`¡Compra exitosa!\nBoleta: ${receipt.id}\nPago: ${receipt.paymentMethod}\nEntrega: ${receipt.deliveryMethod}${address ? '\nDirección: ' + address : ''}\nTotal: $${total.toLocaleString('es-CL')}\n\nPuedes ver los detalles en "Mi Cuenta".`);
+                cart.clear();
+            } catch (error) {
+                console.error('Error guardando orden en Firestore:', error);
+                closeCheckoutModal();
+                alert(`¡Compra registrada!\nBoleta: ${receipt.id}\n(Nota: hubo un problema al guardar en la nube, pero tu pedido se guardó localmente)\n\nPuedes ver los detalles en "Mi Cuenta".`);
+                cart.clear();
+            } finally {
+                checkoutConfirmBtn.disabled = false;
+                checkoutConfirmBtn.textContent = 'Confirmar Compra';
+            }
+        });
+
+        checkoutCloseBtn.addEventListener('click', closeCheckoutModal);
+        checkoutOverlay.addEventListener('click', (e) => { if (e.target === checkoutOverlay) closeCheckoutModal(); });
 
         cartToggle.addEventListener('click', toggleCart);
         cartClose.addEventListener('click', toggleCart);
         cartOverlay.addEventListener('click', toggleCart);
-        document.querySelector('.checkout-btn').addEventListener('click', handleCheckout);
+        document.querySelector('.checkout-btn').addEventListener('click', openCheckoutModal);
 
         cart.subscribe(updateCartUI);
         updateCartUI(cart.items);
