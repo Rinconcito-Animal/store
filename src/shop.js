@@ -234,6 +234,9 @@ function renderProducts(products) {
                 <h3 class="product-name">${product.name}</h3>
                 <span class="product-brand">${product.brand || 'Marca propia'}</span>
                 <p class="product-price">$${product.price.toLocaleString('es-CL')}</p>
+                <p class="product-stock ${product.stock < 5 ? 'low-stock' : ''}">
+                    ${product.stock > 0 ? `Stock: ${product.stock}` : 'Agotado'}
+                </p>
                 <button class="add-to-cart" data-id="${product.id}">Agregar al Carrito</button>
             </div>
         `;
@@ -248,7 +251,10 @@ function renderProducts(products) {
         } else {
             addBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                cart.addItem(product);
+                const result = cart.addItem(product);
+                if (!result.success) {
+                    alert(result.message);
+                }
             });
         }
 
@@ -298,12 +304,25 @@ function openModal(product) {
             <p><strong>Marca:</strong> ${product.brand || 'N/A'}</p>
             <p><strong>Especies:</strong> ${product.species ? product.species.join(', ') : 'N/A'}</p>
             <p><strong>Código:</strong> ${product.sku || 'N/A'}</p>
+            <p class="${product.stock < 5 ? 'low-stock' : ''}" style="margin-top: 10px; font-weight: 700;">
+                Stock disponible: ${product.stock > 0 ? product.stock : 'Agotado'}
+            </p>
         </div>
     `;
     modalAddBtn.onclick = () => {
-        cart.addItem(product);
-        modalAddBtn.textContent = '¡Agregado!';
-        setTimeout(() => modalAddBtn.textContent = 'Agregar al Carrito', 1000);
+        const result = cart.addItem(product);
+        if (result.success) {
+            modalAddBtn.textContent = '¡Agregado!';
+            setTimeout(() => modalAddBtn.textContent = 'Agregar al Carrito', 1000);
+        } else {
+            const originalText = modalAddBtn.textContent;
+            modalAddBtn.textContent = result.message;
+            modalAddBtn.style.backgroundColor = '#ff4d4d';
+            setTimeout(() => {
+                modalAddBtn.textContent = originalText;
+                modalAddBtn.style.backgroundColor = '';
+            }, 2000);
+        }
     };
     productModal.classList.add('active');
     document.body.style.overflow = 'hidden';

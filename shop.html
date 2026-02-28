@@ -1190,8 +1190,16 @@
                     </div>
                     <div class="delivery-details-container" id="delivery-details-container">
                         <div class="delivery-field">
-                            <label for="delivery-address">📍 Dirección de entrega</label>
-                            <input type="text" id="delivery-address" placeholder="Ej: Av. Principal 123, Santiago">
+                            <label>📍 Selecciona tu ubicación en el mapa</label>
+                            <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 10px;">Haz clic en el mapa para
+                                marcar exactamente dónde recibirás tu pedido.</p>
+                            <div id="map-picker"
+                                style="height: 300px; border-radius: 12px; border: 2px solid var(--accent-blue-light); margin-bottom: 15px; position: relative; z-index: 1;">
+                            </div>
+                        </div>
+                        <div class="delivery-field">
+                            <label for="delivery-address">🏠 Dirección escrita (opcional)</label>
+                            <input type="text" id="delivery-address" placeholder="Ej: Depto 402, timbre B, etc.">
                         </div>
                         <div class="delivery-field">
                             <label for="delivery-date">📅 Fecha de entrega (18:00 - 22:00 hras)</label>
@@ -1230,9 +1238,19 @@
                         <span>Rinconcito Animal</span>
                     </div>
                     <p>Tu tienda de mascotas local, impulsada por el cuidado moderno.</p>
+                    <div class="footer-contact">
+                        <div class="contact-item">
+                            <span>📞/📱 WhatsApp: +569 5968 1608</span>
+                        </div>
+                        <div class="contact-item">
+                            <span>🏠 Calle cinco, casa 2662, Floresta 3, Hualpén.</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="footer-bottom">
                     <p>&copy; 2026 Rinconcito Animal. Todos los derechos reservados.</p>
+                    <p style="margin-top: 10px; opacity: 0.8;">Sistema desarrollado por <a
+                            href="http://www.kressinandfuture.cl" target="_blank">Kressin & Future</a></p>
                 </div>
             </div>
         </div>
@@ -1242,7 +1260,7 @@
         import { cart } from './src/cart.js';
         import { initNavbar } from './src/navbar.js';
         import { db, auth } from './src/firebase.js';
-        import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+        import { collection, addDoc, serverTimestamp, writeBatch, doc, increment } from 'firebase/firestore';
 
         initNavbar();
 
@@ -1253,6 +1271,160 @@
         const cartItemsContainer = document.getElementById('cart-items');
         const cartCount = document.getElementById('cart-count');
         const cartTotalAmount = document.getElementById('cart-total-amount');
+
+        // Map Variables
+        let map = null;
+        let marker = null;
+        let selectedCoords = null;
+        let leafletLoaded = false;
+
+        async function loadLeaflet() {
+            if (leafletLoaded || window.L) {
+                leafletLoaded = true;
+                return true;
+            }
+
+            // Clean up previous failed attempts
+            const oldScript = document.querySelector('script[src*="leaflet.js"]');
+            const oldLink = document.querySelector('link[href*="leaflet.css"]');
+            if (oldScript) oldScript.remove();
+            if (oldLink) oldLink.remove();
+
+            return new Promise((resolve, reject) => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                document.head.appendChild(link);
+
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                script.onload = () => {
+                    leafletLoaded = true;
+                    resolve(true);
+                };
+                script.onerror = (e) => {
+                    console.error("Leaflet script failed to load", e);
+                    reject(new Error("No se pudo cargar la librería del mapa. Revisa tu conexión."));
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        async function initMap() {
+            if (map) {
+                setTimeout(() => map.invalidateSize(), 150);
+                return;
+            }
+
+            const container = document.getElementById('map-picker');
+            if (!container) return;
+
+            container.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; opacity:0.6; gap:10px;">
+                    <div class="loader-spinner" style="width:24px; height:24px; border:3px solid var(--accent-blue-light); border-top-color:var(--accent-blue); border-radius:50%; animation: spin 1s linear infinite;"></div>
+                    <span>Cargando mapa y ubicación...</span>
+                </div>
+                <style>@keyframes spin { to { transform: rotate(360deg); } }</style>`;
+
+            try {
+                await loadLeaflet();
+
+                let lat = -33.4489;
+                let lng = -70.6693;
+
+                if ("geolocation" in navigator) {
+                    try {
+                        const position = await new Promise((resolve, reject) => {
+                            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                timeout: 10000,
+                                enableHighAccuracy: true,
+                                maximumAge: 0
+                            });
+                        });
+                        lat = position.coords.latitude;
+                        lng = position.coords.longitude;
+                    } catch (geoErr) {
+                        console.warn("Geolocation fallback:", geoErr.message);
+                    }
+                }
+
+                container.innerHTML = '';
+                // Ensure the container is truly empty before Leaflet takes over
+                if (map) { map.remove(); map = null; }
+
+                map = L.map('map-picker').setView([lat, lng], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap'
+                }).addTo(map);
+
+                const locateBtn = L.control({ position: 'topleft' });
+                locateBtn.onAdd = function () {
+                    const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+                    div.style.backgroundColor = 'white';
+                    div.style.width = '34px';
+                    div.style.height = '34px';
+                    div.style.cursor = 'pointer';
+                    div.style.display = 'flex';
+                    div.style.alignItems = 'center';
+                    div.style.justifyContent = 'center';
+                    div.style.fontSize = '1.2rem';
+                    div.innerHTML = '🎯';
+                    div.onclick = function (e) {
+                        e.stopPropagation();
+                        navigator.geolocation.getCurrentPosition((pos) => {
+                            const newLat = pos.coords.latitude;
+                            const newLng = pos.coords.longitude;
+                            map.setView([newLat, newLng], 15);
+                            placeMarker(newLat, newLng);
+                        }, (err) => alert("Error: " + err.message), { enableHighAccuracy: true });
+                    };
+                    return div;
+                };
+                locateBtn.addTo(map);
+
+                placeMarker(lat, lng);
+
+                map.on('click', (e) => {
+                    placeMarker(e.latlng.lat, e.latlng.lng);
+                });
+
+                setTimeout(() => map.invalidateSize(), 400);
+            } catch (err) {
+                console.error("Map Init Error:", err);
+                container.innerHTML = `
+                    <div style="padding:20px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:15px;">
+                        <p style="color:red; margin:0;">${err.message || 'Error al cargar el mapa.'}</p>
+                        <button id="retry-map" style="padding:10px 20px; border-radius:50px; border:none; background:var(--accent-blue); color:white; cursor:pointer; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.15);">Intentar de nuevo</button>
+                    </div>`;
+
+                // Use a small timeout to ensure DOM is ready
+                setTimeout(() => {
+                    const btn = document.getElementById('retry-map');
+                    if (btn) {
+                        btn.onclick = (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            initMap();
+                        };
+                    }
+                }, 10);
+            }
+        }
+
+        function placeMarker(lat, lng) {
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+                marker.on('dragend', () => {
+                    const pos = marker.getLatLng();
+                    selectedCoords = { lat: pos.lat, lng: pos.lng };
+                    validateCheckout();
+                });
+            }
+            selectedCoords = { lat, lng };
+            validateCheckout();
+        }
 
         window.toggleCart = function () {
             cartDrawer.classList.toggle('active');
@@ -1292,9 +1464,9 @@
             // Attach event listeners to cart buttons
             cartItemsContainer.querySelectorAll('.qty-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const id = parseInt(btn.getAttribute('data-id'));
+                    const id = btn.getAttribute('data-id');
                     const action = btn.getAttribute('data-action');
-                    const item = cart.items.find(i => i.id === id);
+                    const item = cart.items.find(i => String(i.id) === String(id));
                     if (!item) return;
                     if (action === 'decrease') {
                         if (item.quantity <= 1) {
@@ -1310,7 +1482,7 @@
 
             cartItemsContainer.querySelectorAll('.cart-item-remove').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const id = parseInt(btn.getAttribute('data-id'));
+                    const id = btn.getAttribute('data-id');
                     cart.removeItem(id);
                 });
             });
@@ -1367,6 +1539,9 @@
             cartOverlay.classList.remove('active');
             checkoutOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            // Init map after drawer shown so it calculates size correctly
+            setTimeout(initMap, 100);
         }
 
         function closeCheckoutModal() {
@@ -1386,7 +1561,8 @@
 
         function updateCheckoutTotals() {
             const subtotal = cart.getTotal();
-            const isDelivery = getSelectedDelivery() === 'delivery';
+            const deliveryType = getSelectedDelivery();
+            const isDelivery = deliveryType === 'delivery';
             const total = isDelivery ? subtotal + DELIVERY_COST : subtotal;
 
             checkoutSubtotal.textContent = `$${subtotal.toLocaleString('es-CL')}`;
@@ -1395,6 +1571,8 @@
             if (isDelivery) {
                 checkoutDeliveryCost.classList.add('visible');
                 deliveryDetailsContainer.classList.add('visible');
+                // Trigger map init/revalidation when delivery is selected
+                initMap();
             } else {
                 checkoutDeliveryCost.classList.remove('visible');
                 deliveryDetailsContainer.classList.remove('visible');
@@ -1406,9 +1584,9 @@
         function validateCheckout() {
             const payment = getSelectedPayment();
             const delivery = getSelectedDelivery();
-            const addressOk = delivery !== 'delivery' || deliveryAddressInput.value.trim().length > 0;
+            const locationOk = delivery !== 'delivery' || selectedCoords !== null;
             const dateOk = delivery !== 'delivery' || deliveryDateInput.value !== '';
-            checkoutConfirmBtn.disabled = !(payment && delivery && addressOk && dateOk);
+            checkoutConfirmBtn.disabled = !(payment && delivery && locationOk && dateOk);
         }
 
         // Highlight selected option card
@@ -1461,6 +1639,8 @@
                 paymentMethod: paymentLabels[payment],
                 deliveryMethod: deliveryLabels[delivery],
                 deliveryAddress: address,
+                latitude: selectedCoords ? selectedCoords.lat : null,
+                longitude: selectedCoords ? selectedCoords.lng : null,
                 deliveryDate: deliveryDate,
                 status: 'Por Entregar'
             };
@@ -1482,8 +1662,24 @@
                     userId: user ? user.uid : null,
                     userEmail: user ? user.email : null,
                 };
-                await addDoc(collection(db, 'orders'), orderData);
-                console.log('Orden guardada en Firestore exitosamente');
+
+                // Use a batch to ensure order is saved and stock is updated atomically
+                const batch = writeBatch(db);
+
+                // 1. Create the order document
+                const orderRef = doc(collection(db, 'orders'));
+                batch.set(orderRef, orderData);
+
+                // 2. Update stock for each item
+                cart.items.forEach(item => {
+                    const productRef = doc(db, 'inventory', String(item.id));
+                    batch.update(productRef, {
+                        stock: increment(-item.quantity)
+                    });
+                });
+
+                await batch.commit();
+                console.log('Orden guardada y stock actualizado exitosamente');
 
                 closeCheckoutModal();
                 alert(`¡Compra exitosa!\nBoleta: ${receipt.id}\nPago: ${receipt.paymentMethod}\nEntrega: ${receipt.deliveryMethod}${address ? '\nDirección: ' + address : ''}\nTotal: $${total.toLocaleString('es-CL')}\n\nPuedes ver los detalles en "Mi Cuenta".`);

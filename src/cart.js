@@ -10,26 +10,40 @@ export class Cart {
     }
 
     addItem(product) {
-        const existing = this.items.find(item => item.id === product.id);
+        const existing = this.items.find(item => String(item.id) === String(product.id));
+        const stock = product.stock !== undefined ? product.stock : 999;
+
         if (existing) {
-            existing.quantity += 1;
+            if (existing.quantity < stock) {
+                existing.quantity += 1;
+            } else {
+                return { success: false, message: 'No hay más stock disponible' };
+            }
         } else {
-            this.items.push({ ...product, quantity: 1 });
+            if (stock > 0) {
+                this.items.push({ ...product, quantity: 1 });
+            } else {
+                return { success: false, message: 'Producto sin stock' };
+            }
         }
         this.save();
+        return { success: true };
     }
 
     removeItem(productId) {
-        this.items = this.items.filter(item => item.id !== productId);
+        this.items = this.items.filter(item => String(item.id) !== String(productId));
         this.save();
     }
 
     updateQuantity(productId, quantity) {
-        const item = this.items.find(item => item.id === productId);
+        const item = this.items.find(item => String(item.id) === String(productId));
         if (item) {
-            item.quantity = Math.max(1, quantity);
+            const stock = item.stock !== undefined ? item.stock : 999;
+            item.quantity = Math.max(1, Math.min(quantity, stock));
             this.save();
+            return { success: item.quantity === quantity, current: item.quantity };
         }
+        return { success: false };
     }
 
     clear() {
