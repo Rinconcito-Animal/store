@@ -82,24 +82,26 @@ emailForm.addEventListener('submit', async (e) => {
         const pets = [];
         for (let i = 0; i < petEntries.length; i++) {
             const entry = petEntries[i];
-            const petName = entry.querySelector('.pet-name').value;
+            const petName = entry.querySelector('.pet-name').value.trim();
             const petSpecies = entry.querySelector('.pet-species').value;
             const petBirthdate = entry.querySelector('.pet-birthdate').value;
             const imageFile = entry.querySelector('.pet-image').files[0];
 
-            let imageUrl = '';
-            if (imageFile) {
-                const storageRef = ref(storage, `pets/${user.uid}/${Date.now()}_${imageFile.name}`);
-                const snapshot = await uploadBytes(storageRef, imageFile);
-                imageUrl = await getDownloadURL(snapshot.ref);
-            }
+            if (petName !== '' || petSpecies !== '' || petBirthdate !== '' || imageFile) {
+                let imageUrl = '';
+                if (imageFile) {
+                    const storageRef = ref(storage, `pets/${user.uid}/${Date.now()}_${imageFile.name}`);
+                    const snapshot = await uploadBytes(storageRef, imageFile);
+                    imageUrl = await getDownloadURL(snapshot.ref);
+                }
 
-            pets.push({
-                name: petName,
-                species: petSpecies,
-                birthdate: petBirthdate,
-                image: imageUrl
-            });
+                pets.push({
+                    name: petName,
+                    species: petSpecies,
+                    birthdate: petBirthdate,
+                    image: imageUrl
+                });
+            }
         }
 
         // Save additional info to Firestore
