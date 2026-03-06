@@ -1389,3 +1389,119 @@ input[type="range"]::-webkit-slider-thumb:hover {
   text-decoration: none;
   font-weight: 700;
 }
+
+/* WhatsApp Floating Button */
+.wa-float-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background-color: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+  z-index: 999;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  pointer-events: none;
+}
+
+.wa-float-btn.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.wa-float-btn:hover {
+  transform: scale(1.1) translateY(-5px);
+  box-shadow: 0 15px 35px rgba(37, 211, 102, 0.5);
+  background-color: #20BA5A;
+}
+
+.wa-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.wa-invitation {
+  position: absolute;
+  right: 80px;
+  background: white;
+  color: var(--text-espresso);
+  padding: 12px 20px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(75, 54, 33, 0.1);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  visibility: hidden;
+  border: 1px solid rgba(75, 54, 33, 0.05);
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+.wa-invitation::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 8px solid white;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+.wa-float-btn.visible .wa-invitation {
+  opacity: 1;
+  transform: translateX(0);
+  visibility: visible;
+}
+
+/* Subtle pulse for the invitation */
+@keyframes waPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.wa-float-btn .wa-invitation {
+  animation: waPulse 4s infinite ease-in-out;
+}
+
+/* Adjustments for Mobile and Cart Drawer */
+@media (max-width: 768px) {
+  .wa-float-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 54px;
+    height: 54px;
+  }
+
+  .wa-invitation {
+    display: none;
+    /* Hide invitation on small screens */
+  }
+}
+
+/* Ensure it stays above other overlays but below modals if needed */
+.welcome-overlay.active~.wa-float-btn,
+.modal-overlay.active~.wa-float-btn,
+.checkout-overlay.active~.wa-float-btn {
+  z-index: 50;
+}

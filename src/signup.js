@@ -4,9 +4,11 @@ import {
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { initNavbar } from './navbar.js';
+import { initWhatsAppButton } from './whatsapp.js';
 
 // Initialize Navbar
 initNavbar();
+initWhatsAppButton();
 
 // DOM Elements
 const emailForm = document.getElementById('email-signup-form');

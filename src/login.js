@@ -3,9 +3,11 @@ import {
     signInWithEmailAndPassword
 } from "firebase/auth";
 import { initNavbar } from './navbar.js';
+import { initWhatsAppButton } from './whatsapp.js';
 
 // Initialize Navbar
 initNavbar();
+initWhatsAppButton();
 
 // DOM Elements
 const emailForm = document.getElementById('email-login-form');

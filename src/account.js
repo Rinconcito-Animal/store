@@ -2,9 +2,11 @@ import { auth, db, storage, ref, uploadBytes, getDownloadURL } from './firebase.
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, updateDoc, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';
 import { initNavbar } from './navbar.js';
+import { initWhatsAppButton } from './whatsapp.js';
 
 // Initialize Navbar
 initNavbar();
+initWhatsAppButton();
 
 // UI Elements
 const navBtns = document.querySelectorAll('.account-nav-btn');

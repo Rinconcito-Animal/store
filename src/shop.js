@@ -1,6 +1,7 @@
 import { cart } from './cart.js';
 import { db } from './firebase.js';
 import { collection, getDocs } from 'firebase/firestore';
+import { initWhatsAppButton } from './whatsapp.js';
 
 const productsGrid = document.getElementById('products-grid');
 const searchInput = document.getElementById('product-search');
@@ -517,4 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Initialize
-document.addEventListener('DOMContentLoaded', loadProducts);
+document.addEventListener('DOMContentLoaded', () => {
+    loadProducts();
+    initWhatsAppButton();
+});
