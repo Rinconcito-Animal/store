@@ -3,6 +3,9 @@ import { db } from './firebase.js';
 import { collection, getDocs } from 'firebase/firestore';
 import { initWhatsAppButton } from './whatsapp.js';
 
+// Initialize WhatsApp
+initWhatsAppButton();
+
 const productsGrid = document.getElementById('products-grid');
 const searchInput = document.getElementById('product-search');
 const suggestionsContainer = document.getElementById('search-suggestions');
@@ -518,7 +521,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    loadProducts();
-    initWhatsAppButton();
-});
+document.addEventListener('DOMContentLoaded', loadProducts);

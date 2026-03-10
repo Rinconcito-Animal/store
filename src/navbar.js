@@ -8,6 +8,32 @@ export function initNavbar() {
 
     if (!menuToggle || !nav || !navList) return;
 
+    // Create overlay if it doesn't exist
+    let overlay = document.querySelector('.nav-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'nav-overlay';
+        document.body.appendChild(overlay);
+    }
+
+    // Create Close Button for Mobile Nav
+    let closeBtn = nav.querySelector('.nav-close');
+    if (!closeBtn) {
+        closeBtn = document.createElement('button');
+        closeBtn.className = 'nav-close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.setAttribute('aria-label', 'Cerrar menú');
+        nav.insertBefore(closeBtn, nav.firstChild);
+    }
+
+    // Close function helper
+    const closeMenu = () => {
+        nav.classList.remove('active');
+        menuToggle.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+    };
+
     // Handle Authentication State for Navbar
     onAuthStateChanged(auth, (user) => {
         // Base navigation links
@@ -74,24 +100,29 @@ export function initNavbar() {
         e.stopPropagation();
         nav.classList.toggle('active');
         menuToggle.classList.toggle('active');
+        overlay.classList.toggle('active');
         document.body.classList.toggle('menu-open');
     });
+
+    // Event Listeners for closing
+    closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeMenu();
+    });
+
+    overlay.addEventListener('click', closeMenu);
 
     // Close menu when clicking outside
     document.addEventListener('click', (e) => {
         if (nav.classList.contains('active') && !nav.contains(e.target) && e.target !== menuToggle) {
-            nav.classList.remove('active');
-            menuToggle.classList.remove('active');
-            document.body.classList.remove('menu-open');
+            closeMenu();
         }
     });
 
-    // Use event delegation to close menu when clicking any link inside the nav
+    // Close menu when clicking any link
     nav.addEventListener('click', (e) => {
         if (e.target.tagName === 'A') {
-            nav.classList.remove('active');
-            menuToggle.classList.remove('active');
-            document.body.classList.remove('menu-open');
+            closeMenu();
         }
     });
 }

@@ -1,13 +1,13 @@
 import './style.css'
 import { initNavbar } from './navbar.js'
-import { initWhatsAppButton } from './whatsapp.js'
 import { auth } from './firebase.js'
 import { onAuthStateChanged } from 'firebase/auth'
+import { initWhatsAppButton } from './whatsapp.js'
 
 // Micro-animations and interactivity
 document.addEventListener('DOMContentLoaded', () => {
-  initNavbar();
   initWhatsAppButton();
+  initNavbar();
 
   // Welcome Modal Logic
   const welcomeModal = document.getElementById('welcome-modal');

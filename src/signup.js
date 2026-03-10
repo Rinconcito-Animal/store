@@ -6,7 +6,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { initNavbar } from './navbar.js';
 import { initWhatsAppButton } from './whatsapp.js';
 
-// Initialize Navbar
+// Initialize Navbar & WhatsApp
 initNavbar();
 initWhatsAppButton();
 

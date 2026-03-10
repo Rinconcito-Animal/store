@@ -26,10 +26,4 @@ export function initWhatsAppButton() {
     `;
 
     document.body.insertAdjacentHTML('beforeend', btnHtml);
-
-    // Fade in after a short delay
-    const btn = document.getElementById('whatsapp-floating-btn');
-    setTimeout(() => {
-        if (btn) btn.classList.add('visible');
-    }, 1500);
 }

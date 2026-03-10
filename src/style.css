@@ -22,13 +22,22 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
 body {
   font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-cream);
   color: var(--text-espresso);
   line-height: 1.6;
-  overflow-x: hidden;
-  position: relative;
+}
+
+body.menu-open {
+  overflow: hidden;
 }
 
 /* Paw print pattern background */
@@ -147,6 +156,10 @@ nav a {
 nav a:hover {
   opacity: 1;
   color: var(--accent-sage);
+}
+
+.nav-close {
+  display: none;
 }
 
 /* Mobile Menu Toggle */
@@ -495,19 +508,21 @@ footer {
   nav {
     position: fixed;
     top: 0;
-    right: -100%;
+    right: 0;
     width: 80%;
     max-width: 300px;
     height: 100vh;
     background: var(--white);
-    z-index: 150;
+    z-index: 1000;
     transition: var(--transition);
     padding: 100px 40px;
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+    display: none;
+    flex-direction: column;
   }
 
   nav.active {
-    right: 0;
+    display: flex;
   }
 
   nav ul {
@@ -519,6 +534,31 @@ footer {
   nav a {
     font-size: 1.5rem;
     font-weight: 700;
+  }
+
+  .nav-close {
+    display: flex;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: var(--accent-blue-light);
+    border: none;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--text-espresso);
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 1001;
+  }
+
+  .nav-close:hover {
+    background: var(--accent-blue);
+    color: var(--white);
+    transform: rotate(90deg);
   }
 
   .hero-image-container {
@@ -1392,29 +1432,28 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* WhatsApp Floating Button */
 .wa-float-btn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
+  position: fixed !important;
+  bottom: 30px !important;
+  left: 30px !important;
   width: 60px;
   height: 60px;
   background-color: #25D366;
   border-radius: 50%;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
-  z-index: 999;
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 100000 !important;
   text-decoration: none;
-  opacity: 0;
-  transform: translateY(20px) scale(0.8);
-  pointer-events: none;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  pointer-events: auto !important;
 }
 
 .wa-float-btn.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .wa-float-btn:hover {
@@ -1430,7 +1469,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .wa-invitation {
   position: absolute;
-  right: 80px;
+  left: 80px;
   background: white;
   color: var(--text-espresso);
   padding: 12px 20px;
@@ -1439,10 +1478,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
   font-weight: 600;
   box-shadow: 0 10px 30px rgba(75, 54, 33, 0.1);
   white-space: nowrap;
-  opacity: 0;
-  transform: translateX(20px);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  visibility: hidden;
+  opacity: 1;
+  transform: translateX(0);
+  visibility: visible;
   border: 1px solid rgba(75, 54, 33, 0.05);
   max-width: 320px;
   line-height: 1.4;
@@ -1451,10 +1489,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .wa-invitation::after {
   content: '';
   position: absolute;
-  right: -8px;
+  left: -8px;
   top: 50%;
   transform: translateY(-50%);
-  border-left: 8px solid white;
+  border-right: 8px solid white;
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
 }
@@ -1487,15 +1525,19 @@ input[type="range"]::-webkit-slider-thumb:hover {
 /* Adjustments for Mobile and Cart Drawer */
 @media (max-width: 768px) {
   .wa-float-btn {
-    bottom: 20px;
-    right: 20px;
+    bottom: 30px !important;
+    left: 20px !important;
     width: 54px;
     height: 54px;
   }
 
   .wa-invitation {
-    display: none;
-    /* Hide invitation on small screens */
+    display: block;
+    left: 70px;
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    max-width: 180px;
+    white-space: normal;
   }
 }
 
@@ -1503,5 +1545,5 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .welcome-overlay.active~.wa-float-btn,
 .modal-overlay.active~.wa-float-btn,
 .checkout-overlay.active~.wa-float-btn {
-  z-index: 50;
+  z-index: 2000;
 }
