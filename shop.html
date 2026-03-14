@@ -1419,11 +1419,11 @@
                 marker.on('dragend', () => {
                     const pos = marker.getLatLng();
                     selectedCoords = { lat: pos.lat, lng: pos.lng };
-                    validateCheckout();
+                    updateCheckoutTotals();
                 });
             }
             selectedCoords = { lat, lng };
-            validateCheckout();
+            updateCheckoutTotals();
         }
 
         window.toggleCart = function () {
@@ -1491,7 +1491,27 @@
         // ============================
         // CHECKOUT MODAL LOGIC
         // ============================
-        const DELIVERY_COST = 0;
+        // Distance-Based Delivery Constants
+        const STORE_LAT = -36.793782;
+        const STORE_LNG = -73.113086;
+        const THRESHOLD_10KM = 10;
+        const THRESHOLD_20KM = 20;
+        const COMMISSION_FEE = 3000;
+
+        let dynamicDeliveryCost = 0;
+        let deliveryDistance = 0;
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's radius in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
         const checkoutOverlay = document.getElementById('checkout-overlay');
         const checkoutCloseBtn = document.getElementById('checkout-close');
         const checkoutConfirmBtn = document.getElementById('checkout-confirm-btn');
@@ -1563,20 +1583,41 @@
             const subtotal = cart.getTotal();
             const deliveryType = getSelectedDelivery();
             const isDelivery = deliveryType === 'delivery';
-            const total = isDelivery ? subtotal + DELIVERY_COST : subtotal;
-
-            checkoutSubtotal.textContent = `$${subtotal.toLocaleString('es-CL')}`;
-            checkoutTotal.textContent = `$${total.toLocaleString('es-CL')}`;
 
             if (isDelivery) {
+                if (selectedCoords) {
+                    deliveryDistance = calculateDistance(STORE_LAT, STORE_LNG, selectedCoords.lat, selectedCoords.lng);
+                    if (deliveryDistance > THRESHOLD_20KM) {
+                        dynamicDeliveryCost = 0;
+                    } else if (deliveryDistance > THRESHOLD_10KM) {
+                        dynamicDeliveryCost = COMMISSION_FEE;
+                    } else {
+                        dynamicDeliveryCost = 0;
+                    }
+                } else {
+                    dynamicDeliveryCost = 0;
+                }
+
                 checkoutDeliveryCost.classList.add('visible');
                 deliveryDetailsContainer.classList.add('visible');
+                // Update delivery cost display
+                checkoutDeliveryCost.innerHTML = `<span>Costo de delivery ${deliveryDistance ? `(${deliveryDistance.toFixed(1)} km)` : ''}</span> <span>$${dynamicDeliveryCost.toLocaleString('es-CL')}</span>`;
+
+                if (deliveryDistance > THRESHOLD_20KM) {
+                    checkoutDeliveryCost.innerHTML += `<div style="color: #ff4444; font-size: 0.8rem; margin-top: 5px; width: 100%; text-align: right;">⚠️ Supera los 20 km (No disponible)</div>`;
+                }
+
                 // Trigger map init/revalidation when delivery is selected
                 initMap();
             } else {
+                dynamicDeliveryCost = 0;
                 checkoutDeliveryCost.classList.remove('visible');
                 deliveryDetailsContainer.classList.remove('visible');
             }
+
+            const total = subtotal + dynamicDeliveryCost;
+            checkoutSubtotal.textContent = `$${subtotal.toLocaleString('es-CL')}`;
+            checkoutTotal.textContent = `$${total.toLocaleString('es-CL')}`;
 
             validateCheckout();
         }
@@ -1584,8 +1625,9 @@
         function validateCheckout() {
             const payment = getSelectedPayment();
             const delivery = getSelectedDelivery();
-            const locationOk = delivery !== 'delivery' || selectedCoords !== null;
-            const dateOk = delivery !== 'delivery' || deliveryDateInput.value !== '';
+            const isDelivery = delivery === 'delivery';
+            const locationOk = !isDelivery || (selectedCoords !== null && deliveryDistance <= THRESHOLD_20KM);
+            const dateOk = !isDelivery || deliveryDateInput.value !== '';
             checkoutConfirmBtn.disabled = !(payment && delivery && locationOk && dateOk);
         }
 
@@ -1626,7 +1668,7 @@
             };
 
             const subtotal = cart.getTotal();
-            const deliveryCost = delivery === 'delivery' ? DELIVERY_COST : 0;
+            const deliveryCost = dynamicDeliveryCost;
             const total = subtotal + deliveryCost;
 
             const receipt = {
